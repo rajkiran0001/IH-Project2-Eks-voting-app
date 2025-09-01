@@ -17,7 +17,7 @@ spec:
         image: rajdoc111/voting-app-eks-worker:latest
         env:
         - name: DB_HOST
-          value: "postgres-service"
+          value: "db"
         - name: DB_USERNAME
           value: "postgres"
         - name: DB_PASSWORD
@@ -25,7 +25,7 @@ spec:
         - name: DB_NAME
           value: "postgres"                                     
         - name: REDIS_HOST
-          value: "redis-service"
+          value: "redis"
 
 
 

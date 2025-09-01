@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: result-deployment
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: voting-app-eks-result
@@ -19,7 +19,7 @@ spec:
         - containerPort: 80
         env:
         - name: PG_HOST
-          value: "postgres-service"
+          value: "db"
         - name: PG_PORT
           value: "5432"
         - name: PG_DATABASE

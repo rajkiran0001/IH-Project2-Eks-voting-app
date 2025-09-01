@@ -1,6 +1,12 @@
 <!-- © 2024 | Ironhack -->
 
 ---
+1. run docker compose up 
+2. check if the app running locally
+3. check ci.yaml if the docker images are pushed to docker hub (push a change to github action runs automatically)
+4. run the deployment/service yaml file (kubectl apply -f postgres-deployment.yaml)(first db, backend and frontend)
+5. Dockerfile Env should match with your deployment/service yaml files
+
 
 # Multi-Stack Voting Application
 

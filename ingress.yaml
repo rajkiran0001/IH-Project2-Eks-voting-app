@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ui-ingress
+  name: voting-app-ingress
     # Additional annotations if needed
 spec:
   ingressClassName: nginx
@@ -9,7 +9,7 @@ spec:
   - host: five.diogohack.shop # omit if no domain
     http:
       paths:
-      - path: /
+      - path: /vote
         pathType: Prefix
         backend:
           service:
@@ -20,7 +20,7 @@ spec:
   - host: six.diogohack.shop
     http:
       paths:
-      - path: /
+      - path: /result
         pathType: Prefix
         backend:
           service:
