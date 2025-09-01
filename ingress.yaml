@@ -9,7 +9,7 @@ spec:
   - host: five.diogohack.shop # omit if no domain
     http:
       paths:
-      - path: /vote
+      - path: /
         pathType: Prefix
         backend:
           service:
@@ -20,7 +20,7 @@ spec:
   - host: six.diogohack.shop
     http:
       paths:
-      - path: /result
+      - path: /
         pathType: Prefix
         backend:
           service:
