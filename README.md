@@ -161,3 +161,95 @@ docker buildx build --platform linux/amd64 -t myorg/worker:latest ./worker
 This ensures the image is built for the desired platform.
 
 ---
+FIX:
+go to the eks node in aws - go to security - find the role permission and add AmazonEKS_EBS_CSI_Driver_Policy and then beloow install the driver
+
+
+ull steps after OIDC is associated
+
+Create the service account:
+
+eksctl create iamserviceaccount \
+  --region eu-south-2 \
+  --name ebs-csi-controller-sa \
+  --namespace kube-system \
+  --cluster voting-cluster-sec \
+  --attach-policy-arn arn:aws:iam::438465169137:policy/AmazonEKS_EBS_CSI_Driver_Policy \
+  --approve \
+  --override-existing-serviceaccounts
+
+
+Install the driver with Helm:
+
+helm repo add aws-ebs-csi-driver https://kubernetes-sigs.github.io/aws-ebs-csi-driver
+helm repo update
+helm install aws-ebs-csi-driver aws-ebs-csi-driver/aws-ebs-csi-driver \
+  --namespace kube-system \
+  --set controller.serviceAccount.create=false \
+  --set controller.serviceAccount.name=ebs-csi-controller-sa
+
+
+Verify:
+
+kubectl get pods -n kube-system | grep ebs
+kubectl get sc
+
+
+You should see the controller and node Pods running and the StorageClass ready (gp2 or gp3).
+
+If you want, I can give you a one-liner script that does OIDC association + service account + Helm install, fully compatible with the current chart.
+
+
+You said:
+lxrajki@DESKTOP-1NVLRLM:~/Projects/big-projects/project2-eks/example-voting-app-eks$ helm repo add aws-ebs-csi-driver https://kubernetes-sigs.github.io/aws-ebs-csi-driver
+helm repo update
+helm install aws-ebs-csi-driver aws-ebs-csi-driver/aws-ebs-csi-driver \
+  --namespace kube-system \
+  --set controller.serviceAccount.create=false \
+  --set controller.serviceAccount.name=ebs-csi-controller-sa
+"aws-ebs-csi-driver" already exists with the same configuration, skipping
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "aws-ebs-csi-driver" chart repository
+...Successfully got an update from the "ingress-nginx" chart repository
+Update Complete. ⎈Happy Helming!⎈
+Error: INSTALLATION FAILED: cannot re-use a name that is still in use
+lxrajki@DESKTOP-1NVLRLM:~/Projects/big-projects/project2-eks/example-voting-app-eks$
+ChatGPT said:
+
+Ah — that error happens because a release with the name aws-ebs-csi-driver already exists in your cluster. Helm won’t let you install a release with the same name twice.
+
+You have a few options:
+
+1️⃣ Upgrade the existing release (recommended)
+helm upgrade aws-ebs-csi-driver aws-ebs-csi-driver/aws-ebs-csi-driver \
+  --namespace kube-system \
+  --set controller.serviceAccount.create=false \
+  --set controller.serviceAccount.name=ebs-csi-controller-sa
+
+
+upgrade will apply changes to the existing release without reinstalling it.
+
+2️⃣ Uninstall the existing release and reinstall
+helm uninstall aws-ebs-csi-driver --namespace kube-system
+
+helm install aws-ebs-csi-driver aws-ebs-csi-driver/aws-ebs-csi-driver \
+  --namespace kube-system \
+  --set controller.serviceAccount.create=false \
+  --set controller.serviceAccount.name=ebs-csi-controller-sa
+
+
+Use this if you want a fresh install.
+
+3️⃣ Verify the current state
+
+Before doing anything, check what’s installed:
+
+helm list -n kube-system
+kubectl get pods -n kube-system | grep ebs
+
+
+This will show whether the EBS CSI driver is already partially installed.
+
+💡 Tip: Using helm upgrade is safer, especially if your existing release is already running Pods.
+
+If you want, I can give you the exact commands to fix your current cluster so the EBS CSI driver is running correctly without conflicts.
