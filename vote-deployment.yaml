@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vote-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: voting-app-eks-vote
+  template:
+    metadata:
+      labels:
+        app: voting-app-eks-vote
+    spec:
+      containers:
+      - name: vote-container
+        image: rajdoc111/voting-app-eks-vote:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: REDIS_HOST
+          value: "redis-service"        
+       
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vote-service
+spec:
+  selector:
+    app: voting-app-eks-vote
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  type: ClusterIP

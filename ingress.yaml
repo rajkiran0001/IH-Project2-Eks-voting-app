@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ui-ingress
+    # Additional annotations if needed
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: five.diogohack.shop # omit if no domain
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: vote-service
+            port:
+              number: 80
+
+  - host: six.diogohack.shop
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: result-service
+            port:
+              number: 80

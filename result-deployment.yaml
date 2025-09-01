@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: result-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: voting-app-eks-result
+  template:
+    metadata:
+      labels:
+        app: voting-app-eks-result
+    spec:
+      containers:
+      - name: result-container
+        image: rajdoc111/voting-app-eks-result:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: PG_HOST
+          value: "postgres-service"
+        - name: PG_PORT
+          value: "5432"
+        - name: PG_DATABASE
+          value: "postgres"
+        - name: PG_USER
+          value: "postgres"
+        - name: PG_PASSWORD
+          value: "postgres"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: result-service
+spec:
+  selector:
+    app: voting-app-eks-result
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  type: ClusterIP
