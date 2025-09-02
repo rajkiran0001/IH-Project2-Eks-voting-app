@@ -7,7 +7,7 @@
 4. run the deployment/service yaml file (kubectl apply -f postgres-deployment.yaml)(first db, backend and frontend)
 5. Dockerfile Env should match with your deployment/service yaml files
 6. in ingress make sure you put the path:/ not path:/vote or path:/vote because internally the orginal code is written to accept path:/
-7. 
+7. In CD you apply first and then set-image, if set-image is fist then deployment apply will override the set-image
 
 
 # Multi-Stack Voting Application
