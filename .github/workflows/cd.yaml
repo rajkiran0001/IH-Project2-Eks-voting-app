@@ -23,6 +23,8 @@ jobs:
         run: |
           aws eks --region eu-south-2 update-kubeconfig --name voting-cluster-sec
 
+      # find a way to delete existing images so it can get the new ones without the cached ones
+
       - name: Deploy Kubernetes manifests
         run: |
           kubectl apply -f redis-deployment.yaml
