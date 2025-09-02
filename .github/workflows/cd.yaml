@@ -30,7 +30,7 @@ jobs:
           kubectl apply -f worker-deployment.yaml
           kubectl apply -f vote-deployment.yaml
           kubectl apply -f result-deployment.yaml
-          kubectl apply -f ingress.yaml
+          kubectl apply -f ingress-deployment.yaml
 
 
           # Wait for deployments to be ready
@@ -39,7 +39,7 @@ jobs:
           kubectl rollout status deployment/worker-deployment
           kubectl rollout status deployment/vote-deployment
           kubectl rollout status deployment/result-deployment
-          kubectl rollout status deployment/ingress
+          kubectl rollout status deployment/ingress-deployment
 
           # Confirm pods
           kubectl get pods -o wide
