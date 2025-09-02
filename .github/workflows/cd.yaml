@@ -24,6 +24,11 @@ jobs:
           aws eks --region eu-south-2 update-kubeconfig --name voting-cluster-sec
 
       # find a way to delete existing images so it can get the new ones without the cached ones
+      - name: Update deployments with new image
+        run: |
+          kubectl set image deployment/vote-deployment vote=${{ secrets.DOCKERHUB_USERNAME }}/voting-app-eks-vote:${{ github.sha }}
+          kubectl set image deployment/result-deployment result=${{ secrets.DOCKERHUB_USERNAME }}/voting-app-eks-result:${{ github.sha }}
+          kubectl set image deployment/worker-deployment worker=${{ secrets.DOCKERHUB_USERNAME }}/voting-app-eks-worker:${{ github.sha }}
 
       - name: Deploy Kubernetes manifests
         run: |
