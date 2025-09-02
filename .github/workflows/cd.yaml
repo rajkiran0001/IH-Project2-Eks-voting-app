@@ -39,7 +39,6 @@ jobs:
           kubectl rollout status deployment/worker-deployment
           kubectl rollout status deployment/vote-deployment
           kubectl rollout status deployment/result-deployment
-          kubectl rollout status deployment/ingress-deployment
 
           # Confirm pods
           kubectl get pods -o wide
